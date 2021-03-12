@@ -1,22 +1,40 @@
-# Three.js Templete
-Three.js project setup with webpack, jest and firebase.
+Webpack 5 Boilerplate
+===========
+![npm](https://img.shields.io/npm/v/webpack?label=webpack&style=flat-square&logo=webpack)
+![npm](https://img.shields.io/npm/v/webpack-cli?label=webpack-cli&style=flat-square&logo=webpack)
+![npm](https://img.shields.io/badge/dependencies-up--to--date-green?style=flat-square&logo=npm&color=success)
+![Dependabot](https://flat.badgen.net/dependabot/cvgellhorn/webpack-boilerplate?icon=dependabot)
 
-A readymade project for three.js in typescript, with built in commands to quickly test, run, and build for quick project setup.
-made for beginners who want to get working in Three.js immediately.
+> A minimal webpack 5 boilerplate with only Babel, SASS and lodash (optional) on board
 
-# Prerequisites 
+## Requirements
+You only need <b>node.js</b> `>=10.13.0` pre-installed and you’re good to go. 
 
-- Install npm, see https://www.npmjs.com/get-npm. 
-- (firebase only) Setup a firebase project.  https://firebase.google.com/docs/web/setup
+If you don’t want to work with lodash, just remove it from the node packages.
 
-# Setup
+## Usage
+Download to target directory or use this repository as a template
+```sh
+$ curl -L -o master.zip https://github.com/cvgellhorn/webpack-boilerplate/archive/master.zip && unzip master.zip && rm master.zip && mv ./webpack-boilerplate-master/{.,}* ./ && rm -r ./webpack-boilerplate-master
+```
 
-1. "npm install".  Installs npm modules required for the project
-1. (firebase only) firebase init 
+## Setup
+Install dependencies
+```sh
+$ npm install
+```
 
-# commands
+## Development
+Build the app in dev mode and run webpack serve with livereload and autocompile on [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
+```sh
+$ npm run dev
+```
+## Production
+Build the app in production mode
+```sh
+$ npm run build
+```
 
-- "npm test" runs all jest scripts in the "./ts/tests/" folder; for more information on writing test scripts with jest see https://jestjs.io/
-- "npm run start"  locally hosts the project and runs it at localhost:8080. should open automatically in browser.
-- "npm run build" builds the project into a minified index.js and html script in the "dist" folder.
-  - (firebase only) and deploys the project to the attached firebase project. to disable open "package.json" and remove "&& firebase deploy" from "build" script.
+## [webpack](https://webpack.js.org/)
+If you're not familiar with webpack, [webpack serve](https://github.com/webpack/webpack-cli/blob/master/packages/serve/README.md#webpack-cli-serve) will serve the static files in your build folder and watch your source files for changes.
+When changes are made the bundle will be recompiled. This modified bundle is served from memory at the relative path specified in publicPath.
