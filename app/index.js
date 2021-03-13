@@ -5,6 +5,7 @@ const {
     getFirstTimeDerivative,
     getSecondTimeDerivative,
     getBstarDrag,
+    getEccentricity,
 } = require("tle.js/dist/tlejs.cjs");
 import "scss/_index.scss";
 import mapboxgl from "mapbox-gl"; // or "const mapboxgl = require('mapbox-gl');"
@@ -66,6 +67,7 @@ const map = new mapboxgl.Map({
     document.getElementById("mean1").innerHTML = getFirstTimeDerivative(mostRecentTLE);
     document.getElementById("mean2").innerHTML = getSecondTimeDerivative(mostRecentTLE);
     document.getElementById("bstar").innerHTML = getBstarDrag(mostRecentTLE);
+    document.getElementById("eccen").innerHTML = getEccentricity(mostRecentTLE);
 
     const interval = setInterval(() => {
         // const t = new Date("2021-03-13T04:30:00Z"); //now
