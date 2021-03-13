@@ -1,54 +1,132 @@
-/**
- * Application entry point
- */
-
-// Load application styles
+const {
+    getLatLngObj,
+    getEpochTimestamp,
+    getSatelliteInfo,
+    getFirstTimeDerivative,
+    getSecondTimeDerivative,
+} = require("tle.js/dist/tlejs.cjs");
 import "scss/_index.scss";
-
-// ================================
-// START YOUR APP HERE
-// ================================
-
-console.log("test");
-
-// import * as L from "leaflet";
-// var mymap = L.map("mapid").setView([51.505, -0.09], 13);
-// mymap.addLayer(
-//     L.mapbox.styleLayer("mapbox://styles/bfeist/ckm6vcsb83seh17m7pdwb90qk")
-// );
-// L.tileLayer(
-//     "https://api.mapbox.com/styles/bfeist/ckm6vcsb83seh17m7pdwb90qk/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYmZlaXN0IiwiYSI6ImNpbDJva2hseTNnZnd1Z20zNmU0cDExdXUifQ.3acQyDaKU1HS8k5hqPmp1w",
-//     {
-//         maxZoom: 18,
-//         attribution:
-//             'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-//             'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-//         id: "mapbox/streets-v11",
-//         tileSize: 512,
-//         zoomOffset: -1,
-//     }
-// ).addTo(mymap);
-// mapbox://styles/bfeist/ckm6vcsb83seh17m7pdwb90qk
 
 import mapboxgl from "mapbox-gl"; // or "const mapboxgl = require('mapbox-gl');"
 
-mapboxgl.accessToken =
-    "pk.eyJ1IjoiYmZlaXN0IiwiYSI6ImNpbDJva2hseTNnZnd1Z20zNmU0cDExdXUifQ.3acQyDaKU1HS8k5hqPmp1w";
+mapboxgl.accessToken = "pk.eyJ1IjoiYmZlaXN0IiwiYSI6ImNpbDJva2hseTNnZnd1Z20zNmU0cDExdXUifQ.3acQyDaKU1HS8k5hqPmp1w";
 
 const map = new mapboxgl.Map({
     container: "map", // container ID
     // style: "mapbox://styles/bfeist/ckm6vcsb83seh17m7pdwb90qk", // style URL for topo
     style: "mapbox://styles/bfeist/ckm6yjob22j6b17o79mq0tvr7", // satellite
     center: [-74.5, 40], // starting position [lng, lat]
-    zoom: 4, // starting zoom
+    zoom: 2, // starting zoom
+    attributionControl: false,
 });
 
-const interval = setInterval(() => {
-    let curCenter = map.getCenter();
-    let newLng = (curCenter.lng += 0.02);
-    let newLat = curCenter.lat;
-    newLng += 0.02;
-    const newCenter = { lng: newLng, lat: newLat };
-    console.log(newCenter);
-    const map2 = map.setCenter(newCenter);
-}, 1000);
+(async () => {
+    const tle_data = await fetchIssTle();
+
+    const timestampWanted = new Date(); //now
+
+    let thisDateDiff;
+    let lastDateDiff = -1;
+    let mostRecentTLE = "";
+    for (let i = 0; i < tle_data.length; i++) {
+        // console.log(`${i} ${new Date(tle_data[i].EPOCH + "Z").toUTCString()}`);
+        thisDateDiff = new Date(tle_data[i].EPOCH) - timestampWanted;
+        if (i !== 0 && Math.abs(thisDateDiff) > Math.abs(lastDateDiff)) {
+            // we have passed the TLE epoch closest to the wanted date (before the wanted date)
+            const tleObj = tle_data[i - 1];
+            mostRecentTLE = `${tleObj.TLE_LINE0}
+                ${tleObj.TLE_LINE1}
+                ${tleObj.TLE_LINE2}`;
+            break;
+        }
+        lastDateDiff = thisDateDiff;
+    }
+
+    const latLonObj = getLatLngObj(mostRecentTLE, timestampWanted);
+    map.setCenter(latLonObj);
+    console.log(latLonObj);
+
+    var el = document.createElement("div");
+    el.className = "marker";
+    const marker = new mapboxgl.Marker(el).setLngLat(latLonObj).addTo(map);
+
+    const epochTime = new Date(getEpochTimestamp(mostRecentTLE));
+    console.log(`From the TLE decoder: ${epochTime.toUTCString()}`);
+
+    console.log(`Second Time Derivative: ${getSecondTimeDerivative(mostRecentTLE)}`);
+
+    document.getElementById("ephem").innerHTML = displayDateMs(epochTime);
+    document.getElementById("mean1").innerHTML = getFirstTimeDerivative(mostRecentTLE);
+    document.getElementById("mean2").innerHTML = getSecondTimeDerivative(mostRecentTLE);
+
+    const houstonLatLng = {
+        //just need any location for getSatelliteInfo
+        lng: 95.3698,
+        lat: 29.7604,
+    };
+
+    const interval = setInterval(() => {
+        // const t = new Date("2021-03-13T04:30:00Z"); //now
+        const t = new Date(); //now
+        const latLonObj = getLatLngObj(mostRecentTLE, t.getTime());
+        marker.setLngLat(latLonObj);
+
+        const satInfo = getSatelliteInfo(
+            mostRecentTLE, // Satellite TLE string or array.
+            t.getTime(), // Timestamp (ms)
+            houstonLatLng.lat, // Observer latitude (degrees)
+            houstonLatLng.lng, // Observer longitude (degrees)
+            0 // Observer elevation (km)
+        );
+
+        document.getElementById("selTimestamp").innerHTML = displayDateMs(t);
+
+        document.getElementById("selLat").innerHTML = `${latLonObj.lat.toString().substr(0, 16)}`;
+        document.getElementById("selLng").innerHTML = `${latLonObj.lng.toString().substr(0, 16)}`;
+
+        document.getElementById("alt").innerHTML = `${satInfo.height.toString().substr(0, 16)} km`;
+        document.getElementById("velkms").innerHTML = `${satInfo.velocity.toString().substr(0, 15)} km/s`;
+        document.getElementById("velkmh").innerHTML = `${(satInfo.velocity * 3600).toString().substr(0, 15)} km/h`;
+        document.getElementById("velmph").innerHTML = `${(satInfo.velocity * 2236.94).toString().substr(0, 15)} mph`;
+    }, 10);
+
+    const interval2 = setInterval(() => {
+        const timestampWanted = new Date(); //now
+        const latLonObj = getLatLngObj(mostRecentTLE, timestampWanted.getTime());
+        map.setCenter(latLonObj);
+    }, 5000);
+})();
+
+/**
+ * TLE json is sorted descending by EPOCH (date of TLE)
+ * loop through TLEs looking for when the date diff between now and the epoch gets larger, this means the last one we checked was the nearest to the time we want.
+ * */
+async function fetchIssTle() {
+    // const response = await fetch("/assets/iss_tle.json");
+    const response = await fetch("http://coda-data.apolloinrealtime.org/iss_tle.json");
+    const tle_data = response.json();
+    return tle_data;
+}
+
+function padZeros(num, size) {
+    let s = num.toString();
+    return s.padStart(2, "0");
+}
+
+function displayDateMs(d) {
+    return (
+        d.getUTCFullYear() +
+        "-" +
+        padZeros(d.getUTCMonth() + 1, 2) +
+        "-" +
+        d.getUTCDate() +
+        " " +
+        padZeros(d.getUTCHours(), 2) +
+        ":" +
+        padZeros(d.getUTCMinutes(), 2) +
+        ":" +
+        padZeros(d.getUTCSeconds(), 2) +
+        "." +
+        d.getMilliseconds()
+    );
+}

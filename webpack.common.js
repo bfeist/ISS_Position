@@ -29,7 +29,7 @@ module.exports = (env) => {
 
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, "index.ejs"),
-                title: "ISS Position",
+                title: "CODA ISS Temporal Groundtrack",
             }),
 
             new ImageMinimizerPlugin({
@@ -105,7 +105,7 @@ module.exports = (env) => {
 
                 // IMAGES
                 {
-                    test: /\.(png|jpe?g|gif)$/i,
+                    test: /\.(png|jpe?g|gif|json)$/i,
                     use: {
                         loader: "file-loader",
                         options: {

@@ -1,24 +1,22 @@
-const { merge } = require('webpack-merge');
-const common = require('./webpack.common');
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common");
 
-module.exports = env => {
+module.exports = (env) => {
     return merge(common(env), {
-
-        mode: 'development',
+        mode: "development",
 
         // Use eval-cheap-source-map for accurate line numbers, eval has best build performance
-        devtool: 'eval',
-    
+        devtool: "inline-source-map",
+
         output: {
             pathinfo: true,
-            publicPath: '/',
-            filename: '[name].bundle.js'
+            publicPath: "/",
+            filename: "[name].bundle.js",
         },
-    
+
         devServer: {
-            host: 'localhost',
-            port: 3000
-        }
-    
+            host: "localhost",
+            port: 3000,
+        },
     });
 };
