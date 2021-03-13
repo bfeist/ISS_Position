@@ -11,6 +11,15 @@
       "url": "http://127.0.0.1:5500",
       "webRoot": "${workspaceFolder}/src",
       "trace": true,
+    },
+    {
+      "type": "chrome",
+       "request": "attach",
+       "name": "Attach to Chrome",
+       "url": "http://localhost:3000/*",
+       "webRoot": "${workspaceFolder}",
+       "sourceMaps": true,
+       "trace": true
     }
   ]
 }

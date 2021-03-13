@@ -4,6 +4,16 @@
 html {
     box-sizing: border-box;
 }
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: inherit;
+}
+h3 {
+    font-family: "Courier New", Courier, monospace;
+}
+
+#map {
+    width: 600px;
+    height: 400px;
 }

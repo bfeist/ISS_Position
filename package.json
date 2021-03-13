@@ -9,7 +9,7 @@
     "node": ">=10.13.0"
   },
   "scripts": {
-    "dev": "webpack serve --progress --env dev --config webpack.dev.js",
+    "dev": "webpack serve --progress --env dev --config webpack.dev.js --inline --hot",
     "build": "webpack --progress --env prod --config webpack.prod.js"
   },
   "repository": {
@@ -17,7 +17,9 @@
     "url": "https://cvgellhorn@github.com/cvgellhorn/webpack-boilerplate.git"
   },
   "dependencies": {
-    "lodash": "4.17.21"
+    "leaflet": "^1.7.1",
+    "lodash": "4.17.21",
+    "mapbox-gl": "^2.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.13.10",
