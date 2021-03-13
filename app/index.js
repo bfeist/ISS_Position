@@ -4,13 +4,20 @@ const {
     getSatelliteInfo,
     getFirstTimeDerivative,
     getSecondTimeDerivative,
+    getBstarDrag,
 } = require("tle.js/dist/tlejs.cjs");
 import "scss/_index.scss";
-
 import mapboxgl from "mapbox-gl"; // or "const mapboxgl = require('mapbox-gl');"
 
 mapboxgl.accessToken = "pk.eyJ1IjoiYmZlaXN0IiwiYSI6ImNpbDJva2hseTNnZnd1Z20zNmU0cDExdXUifQ.3acQyDaKU1HS8k5hqPmp1w";
 
+//just need any location for getSatelliteInfo
+const houstonLatLng = {
+    lng: 95.3698,
+    lat: 29.7604,
+};
+
+// create Mapbox map object
 const map = new mapboxgl.Map({
     container: "map", // container ID
     // style: "mapbox://styles/bfeist/ckm6vcsb83seh17m7pdwb90qk", // style URL for topo
@@ -20,6 +27,7 @@ const map = new mapboxgl.Map({
     attributionControl: false,
 });
 
+// Main section that depends on await fetch of ephemeris
 (async () => {
     const tle_data = await fetchIssTle();
 
@@ -28,6 +36,7 @@ const map = new mapboxgl.Map({
     let thisDateDiff;
     let lastDateDiff = -1;
     let mostRecentTLE = "";
+    // chew through ephemiris data looking for the most recent TLE for the timestamp of interest
     for (let i = 0; i < tle_data.length; i++) {
         // console.log(`${i} ${new Date(tle_data[i].EPOCH + "Z").toUTCString()}`);
         thisDateDiff = new Date(tle_data[i].EPOCH) - timestampWanted;
@@ -42,6 +51,7 @@ const map = new mapboxgl.Map({
         lastDateDiff = thisDateDiff;
     }
 
+    //calculate lat long for timestamp of interest using mostRecentTLE as orbital starting point
     const latLonObj = getLatLngObj(mostRecentTLE, timestampWanted);
     map.setCenter(latLonObj);
     console.log(latLonObj);
@@ -51,19 +61,11 @@ const map = new mapboxgl.Map({
     const marker = new mapboxgl.Marker(el).setLngLat(latLonObj).addTo(map);
 
     const epochTime = new Date(getEpochTimestamp(mostRecentTLE));
-    console.log(`From the TLE decoder: ${epochTime.toUTCString()}`);
-
-    console.log(`Second Time Derivative: ${getSecondTimeDerivative(mostRecentTLE)}`);
 
     document.getElementById("ephem").innerHTML = displayDateMs(epochTime);
     document.getElementById("mean1").innerHTML = getFirstTimeDerivative(mostRecentTLE);
     document.getElementById("mean2").innerHTML = getSecondTimeDerivative(mostRecentTLE);
-
-    const houstonLatLng = {
-        //just need any location for getSatelliteInfo
-        lng: 95.3698,
-        lat: 29.7604,
-    };
+    document.getElementById("bstar").innerHTML = getBstarDrag(mostRecentTLE);
 
     const interval = setInterval(() => {
         // const t = new Date("2021-03-13T04:30:00Z"); //now
