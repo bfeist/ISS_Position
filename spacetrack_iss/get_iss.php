@@ -1,5 +1,7 @@
 <?php
 
+require 'credentials.php';
+
 header('Content-Type: application/json');
 if (!isset($_GET['date'])) {
     echo "{'error': 'need date parameter. eg ?date=2021-03-14'}";
@@ -40,7 +42,7 @@ if (!$cachedData || $clearTodayCache) { //if not in cache, or if we want to reca
     // call space-track with auth and query in one step
     $queryUrl = "https://www.space-track.org/basicspacedata/query/class/tle/NORAD_CAT_ID/25544/EPOCH/>" . $dateParam . "%2000:00:00,<" . $dateParam . "%2023:59:59/orderby/EPOCH desc/limit/100/emptyresult/show";
     $curl = curl_init("https://www.space-track.org/ajaxauth/login");
-    curl_setopt($curl, CURLOPT_POSTFIELDS, 'identity=bf@benfeist.com&password=oX3kI0qA1yC8yE6h&query=' . $queryUrl);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $credentials . '&query=' . $queryUrl);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     $data = curl_exec($curl);
 
