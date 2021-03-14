@@ -23,6 +23,6 @@ $ npm run build
 Copy contents of `/dist` folder to external server
 
 ## Notes
-The `spacetrack_iss` folder contains a simple PHP space-track.org API caching scheme. This app hits the API for ISS TLE ephemeris json objects for a given day and caches the response. Right now this is decoupled from the rest of this application. Run it in an environment of your choice that has PHP curl capability. The location of the service should be hard coded into the index.js file.
+The `spacetrack_iss` folder contains a simple PHP `space-track.org` API caching scheme. This app hits the API for ISS TLE ephemeris JSON objects for a given day and caches the response. This is decoupled from the rest of the code in this repo. Run it in an environment of your choice that has PHP curl capability. Put the location URL into the `index.js` file.
 
 [TLE](https://en.wikipedia.org/wiki/Two-line_element_set) data is processed using `tle.js` library into orbital data including latitude and longitude. This data is fed into `mapbox-gl` on an internal to update the ISS position every 100th of a second, and recenter the map every 5 seconds. 
