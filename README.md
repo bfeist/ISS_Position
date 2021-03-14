@@ -10,9 +10,11 @@ CODA ISS Temporal Groundtrack
 Built to be stood up quickly under VSCode.
 
 ## API accounts
-[Mapbox](https://www.mapbox.com/) access key (create a`src/credentials.js` file in the format `mapboxCredentials = <mapboxkey>`)
+[Mapbox](https://www.mapbox.com/) access key (create a`src/credentials.js` file with one line in it: `mapboxCredentials = <mapboxkey>`)
 
-Space-track.org user account (create a `spacetrack_iss/credentials.php` file in the format `$credentials = 'identity=<username>&password=<password>`)
+Space-track.org user account (create a `spacetrack_iss/credentials.php` file with two lines in it:  
+`<? php`  
+`$credentials = 'identity=<username>&password=<password>`)
 
 ## Run
 $ npm run dev
