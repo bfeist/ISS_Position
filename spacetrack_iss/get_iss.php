@@ -1,5 +1,7 @@
 <?php
 
+// credentials.php sets $credentials variable in the format 'identity=<username>&password=<password>';
+// create account at space-track.org
 require 'credentials.php';
 
 header('Content-Type: application/json');
@@ -8,8 +10,8 @@ if (!isset($_GET['date'])) {
     exit();
 }
 
-$dateParam = $_GET['date']; //yyyy-mm-dd
-if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dateParam)) { //check if valid date string
+$dateParam = $_GET['date'];
+if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dateParam)) { //check if valid yyyy-mm-dd string
     echo "{'error': 'bad date format'}";
     exit();
 }
@@ -25,17 +27,18 @@ if ($requestedDate > $todayDate) {
     exit();
 }
 
-//check if date param is today. If it is, use yesterday's data because we don't want to cache incomplete data from today
-$interval = $todayDate->diff($requestedDate);
+$cacheFilename = $dateParam . '.json';
+
+//check if date param is today. If it is, use today.json cache file and refresh it if > 1 hour old.
 $clearTodayCache = false;
+$interval = $todayDate->diff($requestedDate);
 if ($interval->days == 0) { //if today implement incremental caching
-    if (time() - filemtime("./data_cache/_lastCachedtoday") > 3600) { //if cache older that 1 hour, recache from API
+    $cacheFilename = 'today.json';
+    if (time()-@filemtime("./data_cache/" . $cacheFilename) > 3600) { //if cache older that 1 hour, recache from API
         $clearTodayCache = true;
-        touch("./data_cache/_lastCachedtoday"); //touch the file so the file timestamp becomes now
     }
 }
 
-$cacheFilename = $dateParam . '.json';
 //check if date requested already in cache, if so, read it and return it
 $cachedData = @file_get_contents("./data_cache/" . $cacheFilename);
 if (!$cachedData || $clearTodayCache) { //if not in cache, or if we want to recache today's results, get from space-track.org
