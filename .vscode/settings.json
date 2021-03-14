@@ -17,5 +17,9 @@
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "liveServer.settings.root": "/dist"
+  "[php]": {
+    "editor.defaultFormatter": "kokororin.vscode-phpfmt"
+  },
+  "liveServer.settings.root": "/dist",
+  "php.suggest.basic": false,
 }

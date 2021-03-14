@@ -26,11 +26,16 @@ const map = new mapboxgl.Map({
     center: [-74.5, 40], // starting position [lng, lat]
     zoom: 2, // starting zoom
     attributionControl: false,
+    antialias: true,
 });
 
 // Main section that depends on await fetch of ephemeris
 (async () => {
-    const tle_data = await fetchIssTle();
+    //date to get TLE for
+    const t = new Date();
+    const dateToFetch = t.toISOString().split("T")[0];
+
+    const tle_data = await fetchIssTle(dateToFetch);
 
     const timestampWanted = new Date(); //now
 
@@ -105,9 +110,12 @@ const map = new mapboxgl.Map({
  * TLE json is sorted descending by EPOCH (date of TLE)
  * loop through TLEs looking for when the date diff between now and the epoch gets larger, this means the last one we checked was the nearest to the time we want.
  * */
-async function fetchIssTle() {
+async function fetchIssTle(dateToFetch) {
     // const response = await fetch("/assets/iss_tle.json");
-    const response = await fetch("http://coda-data.apolloinrealtime.org/iss_tle.json");
+    // const response = await fetch("http://coda-data.apolloinrealtime.org/iss_tle.json");
+    const response = await fetch(
+        "http://coda-data.apolloinrealtime.org/spacetrack_iss/get_iss.php?date=" + dateToFetch
+    );
     const tle_data = response.json();
     return tle_data;
 }
