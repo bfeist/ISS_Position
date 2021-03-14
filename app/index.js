@@ -26,6 +26,7 @@ const map = new mapboxgl.Map({
     center: [-74.5, 40], // starting position [lng, lat]
     zoom: 2, // starting zoom
     attributionControl: false,
+    antialias: true,
 });
 
 // Main section that depends on await fetch of ephemeris
