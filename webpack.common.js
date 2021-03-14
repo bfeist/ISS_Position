@@ -4,9 +4,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 
 const dirNode = "node_modules";
-const dirApp = path.join(__dirname, "app");
-const dirStyles = path.join(__dirname, "styles");
-const dirAssets = path.join(__dirname, "assets");
+const dirApp = path.join(__dirname, "src");
+const dirStyles = path.join(__dirname, "src/styles");
+const dirAssets = path.join(__dirname, "src/assets");
 
 /**
  * Webpack Configuration
@@ -28,7 +28,7 @@ module.exports = (env) => {
             new webpack.DefinePlugin({ IS_DEV }),
 
             new HtmlWebpackPlugin({
-                template: path.join(__dirname, "index.ejs"),
+                template: path.join(__dirname, "src/index.ejs"),
                 title: "CODA ISS Temporal Groundtrack",
             }),
 
