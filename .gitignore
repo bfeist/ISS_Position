@@ -14,4 +14,4 @@ result.xml
 npm-debug.log
 
 */data_cache/*
-*/credentials.php
+*/credentials*
