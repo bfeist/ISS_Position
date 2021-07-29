@@ -43,7 +43,10 @@ const map = new mapboxgl.Map({
   let thisDateDiff;
   let lastDateDiff = -1;
   let mostRecentTLE = "";
-  // chew through ephemiris data looking for the most recent TLE for the timestamp of interest
+  /**
+   * loop through TLEs looking for when the date diff between now and the epoch gets larger, this means the last one we checked was the nearest to the time we want.
+   */
+  
   for (let i = 0; i < tle_data.length; i++) {
     // console.log(`${i} ${new Date(tle_data[i].EPOCH + "Z").toUTCString()}`);
     thisDateDiff = new Date(tle_data[i].EPOCH) - timestampWanted;
@@ -109,7 +112,6 @@ const map = new mapboxgl.Map({
 
 /**
  * TLE json is sorted descending by EPOCH (date of TLE)
- * loop through TLEs looking for when the date diff between now and the epoch gets larger, this means the last one we checked was the nearest to the time we want.
  * */
 async function fetchIssTle(dateToFetch) {
   // const response = await fetch("/assets/iss_tle.json");
