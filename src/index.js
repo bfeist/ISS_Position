@@ -46,17 +46,14 @@ const map = new mapboxgl.Map({
   /**
    * loop through TLEs looking for when the date diff between now and the epoch gets larger, this means the last one we checked was the nearest to the time we want.
    */
-  
+
   for (let i = 0; i < tle_data.length; i++) {
-    // console.log(`${i} ${new Date(tle_data[i].EPOCH + "Z").toUTCString()}`);
     thisDateDiff = new Date(tle_data[i].EPOCH) - timestampWanted;
-    if (i !== 0 && Math.abs(thisDateDiff) > Math.abs(lastDateDiff)) {
-      // we have passed the TLE epoch closest to the wanted date (before the wanted date)
-      const tleObj = tle_data[i - 1];
+    const tleObj = tle_data[i];
+    if (lastDateDiff === -1 || thisDateDiff <= lastDateDiff) {
       mostRecentTLE = `${tleObj.TLE_LINE0}
                 ${tleObj.TLE_LINE1}
                 ${tleObj.TLE_LINE2}`;
-      break;
     }
     lastDateDiff = thisDateDiff;
   }
