@@ -11,7 +11,7 @@ Built to be stood up quickly under VSCode using Node.
 
 The `spacetrack_iss` folder contains a simple PHP `space-track.org` API caching scheme. This app hits the API for ISS TLE ephemeris JSON objects for a given day and caches the response. This is decoupled from the rest of the code in this repo. Run it in an environment of your choice that has PHP curl capability. Put the location URL into the `index.js` file.
 
-[TLE](https://en.wikipedia.org/wiki/Two-line_element_set) data is processed using `tle.js` library into orbital data including latitude and longitude. This data is fed into `mapbox-gl` on an internal to update the ISS position every 100th of a second, and recenter the map every 5 seconds. 
+[TLE](https://en.wikipedia.org/wiki/Two-line_element_set) data is processed using `tle.js` library into orbital data including latitude and longitude. This data is fed into `mapbox-gl` on an interval to update the ISS position every 100th of a second, and recenter the map every 5 seconds. 
 
 # Accounts Needed for External APIs
 ## Mapbox
