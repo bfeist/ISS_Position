@@ -1,4 +1,4 @@
-CODA ISS Temporal Groundtrack
+ISS Temporal Groundtrack
 ===========
 ![npm](https://img.shields.io/npm/v/mapbox-gl?label=mapbox-gl&style=flat-square&logo=webpack)
 ![npm](https://img.shields.io/npm/v/tle.js?label=tle.js&style=flat-square&logo=webpack)
