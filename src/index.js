@@ -113,7 +113,7 @@ const map = new mapboxgl.Map({
 async function fetchIssTle(dateToFetch) {
   // const response = await fetch("/assets/iss_tle.json");
   // const response = await fetch("http://coda-data.apolloinrealtime.org/iss_tle.json");
-  const response = await fetch("http://coda-data.apolloinrealtime.org/spacetrack_iss/get_iss.php?date=" + dateToFetch);
+  const response = await fetch("https://coda-data.apolloinrealtime.org/spacetrack_iss/get_iss.php?date=" + dateToFetch);
   const tle_data = response.json();
   return tle_data;
 }
