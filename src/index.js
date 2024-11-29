@@ -1,4 +1,4 @@
-const {
+import {
   getLatLngObj,
   getEpochTimestamp,
   getSatelliteInfo,
@@ -6,10 +6,12 @@ const {
   getSecondTimeDerivative,
   getBstarDrag,
   getEccentricity,
-} = require("tle.js/dist/tlejs.cjs");
-import "credentials";
-import "scss/_index.scss";
-import mapboxgl from "mapbox-gl"; // or "const mapboxgl = require('mapbox-gl');"
+} from "tle.js";
+import "./credentials";
+import "./styles/scss/_index.scss";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { mapboxCredentials } from "./credentials";
 
 mapboxgl.accessToken = mapboxCredentials;
 

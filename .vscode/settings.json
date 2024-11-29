@@ -21,5 +21,5 @@
     "editor.defaultFormatter": "kokororin.vscode-phpfmt"
   },
   "liveServer.settings.root": "/dist",
-  "php.suggest.basic": false,
+  "php.suggest.basic": false
 }
