@@ -7,13 +7,11 @@ import {
   getBstarDrag,
   getEccentricity,
 } from "tle.js";
-import "./credentials";
 import "./styles/scss/_index.scss";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { mapboxCredentials } from "./credentials";
 
-mapboxgl.accessToken = mapboxCredentials;
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 //just need any location for getSatelliteInfo
 const houstonLatLng = {
@@ -115,9 +113,8 @@ const map = new mapboxgl.Map({
  * TLE json is sorted descending by EPOCH (date of TLE)
  * */
 async function fetchIssTle(dateToFetch) {
-  // const response = await fetch("/assets/iss_tle.json");
-  // const response = await fetch("http://coda-data.apolloinrealtime.org/iss_tle.json");
-  const response = await fetch("https://coda-data.apolloinrealtime.org/spacetrack_iss/get_iss.php?date=" + dateToFetch);
+  const urlBase = import.meta.env.VITE_SPACETRACK_ISS_API_URL;
+  const response = await fetch(`${urlBase}?date=${dateToFetch}`);
   const tle_data = response.json();
   return tle_data;
 }
