@@ -77,8 +77,7 @@ const map = new mapboxgl.Map({
   document.getElementById("bstar").innerHTML = getBstarDrag(mostRecentTLE);
   document.getElementById("eccen").innerHTML = getEccentricity(mostRecentTLE);
 
-  const interval = setInterval(() => {
-    // const t = new Date("2021-03-13T04:30:00Z"); //now
+  function updateSatellitePosition() {
     const t = new Date(); //now
     const latLonObj = getLatLngObj(mostRecentTLE, t.getTime());
     marker.setLngLat(latLonObj);
@@ -100,7 +99,10 @@ const map = new mapboxgl.Map({
     document.getElementById("velkms").innerHTML = `${satInfo.velocity.toString().substr(0, 15)} km/s`;
     document.getElementById("velkmh").innerHTML = `${(satInfo.velocity * 3600).toString().substr(0, 15)} km/h`;
     document.getElementById("velmph").innerHTML = `${(satInfo.velocity * 2236.94).toString().substr(0, 15)} mph`;
-  }, 10);
+
+    requestAnimationFrame(updateSatellitePosition);
+  }
+  updateSatellitePosition();
 
   const interval2 = setInterval(() => {
     const timestampWanted = new Date(); //now
