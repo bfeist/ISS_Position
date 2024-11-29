@@ -12,6 +12,7 @@ bower_components/
 ## Files
 result.xml
 npm-debug.log
+cookies.txt
 
 */data_cache/*
 */credentials*
